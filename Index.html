@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Doces e Salgados da Graciete</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #fff5e9;
+    margin: 0;
+    color: #492716;
+}
+
+header {
+    background: #542b18;
+    color: white;
+    text-align: center;
+    padding: 25px 10px;
+}
+
+header h1 {
+    font-size: 25px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.produtos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px;
+}
+
+.produto {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 6px #0002;
+}
+
+.emoji {
+    font-size: 45px;
+}
+
+button {
+    background: #ef416d;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#carrinho {
+    background: white;
+    margin: 12px;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.whatsapp {
+    display: block;
+    background: #119b50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 25px;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div style="font-size:45px">🧁</div>
+    <h1>Doces e Salgados da Graciete</h1>
+    <p>Sabor, qualidade e carinho em cada detalhe!</p>
+</header>
+
+<h2>🍰 Os nossos produtos</h2>
+
+<div class="produtos">
+
+    <div class="produto">
+        <div class="emoji">🎂</div>
+        <h3>Bolo de Chocolate</h3>
+        <p>15.000 Kz</p>
+        <button onclick="adicionar('Bolo de Chocolate',15000)">
+            Adicionar
+        </button>
+    </div>
+
+    <div class="produto">
+        <div class="emoji">🍰</div>
+        <h3>Bolo de Morango</h3>
+        <p>18.000 Kz</p>
+        <button onclick="adicionar('Bolo de Morango',18000)">
+            Adicionar
+        </button>
+    </div>
+
+    <div class="produto">
+        <div class="emoji">🥟</div>
+        <h3>Pastel de Carne</h3>
+        <p>1.000 Kz</p>
+        <button onclick="adicionar('Pastel de Carne',1000)">
+            Adicionar
+        </button>
+    </div>
+
+    <div class="produto">
+        <div class="emoji">🍗</div>
+        <h3>Coxinha de Frango</h3>
+        <p>1.000 Kz</p>
+        <button onclick="adicionar('Coxinha de Frango',1000)">
+            Adicionar
+        </button>
+    </div>
+
+    <div class="produto">
+        <div class="emoji">🥤</div>
+        <h3>Refrigerante</h3>
+        <p>1.500 Kz</p>
+        <button onclick="adicionar('Refrigerante',1500)">
+            Adicionar
+        </button>
+    </div>
+
+    <div class="produto">
+        <div class="emoji">🥭</div>
+        <h3>Sumo Natural</h3>
+        <p>2.000 Kz</p>
+        <button onclick="adicionar('Sumo Natural',2000)">
+            Adicionar
+        </button>
+    </div>
+
+</div>
+
+<div id="carrinho">
+    <h2>🛒 O meu carrinho</h2>
+
+    <div id="lista">
+        Ainda não adicionaste produtos.
+    </div>
+
+    <h3 id="total">Total: 0 Kz</h3>
+
+    <label for="cliente">O teu nome:</label>
+    <input id="cliente" type="text"
+           placeholder="Escreve o teu nome"
+           style="width:95%;padding:10px;margin-top:8px">
+
+    <a class="whatsapp" href="#" onclick="encomendar(event)">
+        📲 Encomendar pelo WhatsApp
+    </a>
+</div>
+
+<script>
+let carrinho = [];
+const numeroWhatsApp = "244933284094";
+
+function adicionar(nome, preco) {
+    carrinho.push({
+        nome: nome,
+        preco: preco
+    });
+
+    atualizar();
+}
+
+function atualizar() {
+    let lista = document.getElementById("lista");
+    let total = 0;
+
+    if (carrinho.length === 0) {
+        lista.innerHTML = "Ainda não adicionaste produtos.";
+    } else {
+        lista.innerHTML = "";
+
+        carrinho.forEach(function(produto) {
+            lista.innerHTML +=
+                "<p>" + produto.nome + " — " +
+                produto.preco.toLocaleString("pt-PT") +
+                " Kz</p>";
+
+            total += produto.preco;
+        });
+    }
+
+    document.getElementById("total").innerHTML =
+        "Total: " + total.toLocaleString("pt-PT") + " Kz";
+}
+
+function encomendar(event) {
+    event.preventDefault();
+
+    if (carrinho.length === 0) {
+        alert("Adiciona primeiro algum produto ao carrinho.");
+        return;
+    }
+
+    let nome = document.getElementById("cliente").value.trim();
+
+    if (nome === "") {
+        alert("Escreve o teu nome.");
+        return;
+    }
+
+    let total = 0;
+    let mensagem = "Olá, Doces e Salgados da Graciete!%0A";
+    mensagem += "Nome do cliente: " + encodeURIComponent(nome) + "%0A";
+    mensagem += "A minha encomenda:%0A";
+
+    carrinho.forEach(function(produto) {
+        mensagem += "- " + encodeURIComponent(produto.nome) +
+            ": " + produto.preco + " Kz%0A";
+
+        total += produto.preco;
+    });
+
+    mensagem += "%0ATotal: " + total + " Kz";
+    mensagem += "%0APor favor, confirmem a minha encomenda.";
+
+    let url = "https://wa.me/" + numeroWhatsApp +
+              "?text=" + mensagem;
+
+    window.open(url, "_blank");
+}
+</script>
+
+</body>
+</html>
